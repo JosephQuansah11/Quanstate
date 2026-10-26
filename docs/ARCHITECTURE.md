@@ -168,6 +168,8 @@ shorter VAD segments bound the wait.
 - Live integration: real Uvicorn subprocess + `websockets` client, 60 text turns + binary audio, measured p50/p95/max and
   cache hit rate (printed as `LIVE LATENCY REPORT`).
 - Optional real-model test: local CTranslate2 Whisper + WAV, skipped unless env vars are provided.
+- Web runtime smoke: `scripts/web-smoke.mjs` and `scripts/web-live-smoke.mjs` boot the production bundle in jsdom with
+  mocked fetch/WebSocket, asserting the language screen, session handshake, typed translation and cache badge.
 - Cross-language E2E: `scripts/e2e-client.mjs` uses the production SDK build against a running service (WebSocket
   translation, learning, memory and WAV TTS), proving the Python and TypeScript halves speak the same protocol.
 - TypeScript: protocol round-trips, transport queue/reconnect, session event routing, PCM conversion benchmarks, metrics,

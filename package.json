@@ -9,9 +9,11 @@
     "test": "npm run test --workspaces --if-present",
     "dev:web": "npm run build --workspace @quanstate/services && npm run dev --workspace @quanstate/web",
     "dev:api": "cd api && uvicorn quanstate.server:app --reload --port 8000",
-    "e2e:client": "node scripts/e2e-client.mjs"
+    "e2e:client": "node scripts/e2e-client.mjs",
+    "smoke:web": "npm run build --workspace @quanstate/web && node scripts/web-smoke.mjs && node scripts/web-live-smoke.mjs"
   },
   "devDependencies": {
+    "jsdom": "^30.1.3",
     "typescript": "5.9.3",
     "vitest": "5.0.5"
   },

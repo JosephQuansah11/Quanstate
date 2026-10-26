@@ -166,6 +166,7 @@ node scripts/e2e-client.mjs http://127.0.0.1:8000
 # Type checks + production build
 npm run typecheck
 npm run build
+npm run smoke:web        # boots the built bundle in jsdom and asserts the language screen
 ```
 
 Run the real-model STT check on any machine with a local Whisper directory:
