@@ -152,7 +152,7 @@ Piper needs the `piper` binary and voices; set `QUANSTATE_TTS=piper`.
 
 ```bash
 # Python: unit + REST + WebSocket + real Uvicorn latency benchmark
-cd api && pytest -q                      # 67 tests (1 optional model test skips)
+cd api && pytest -q                      # 69 tests (1 optional model test skips)
 pytest tests/test_live_latency.py -q -s  # prints the live latency report
 
 # Shared SDK (protocol, transport/reconnect, PCM, metrics, session state machine)
