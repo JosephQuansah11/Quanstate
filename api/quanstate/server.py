@@ -10,7 +10,7 @@ from typing import Any
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import Response
 from pydantic import BaseModel, Field
 
 from .audio import wav_bytes
@@ -36,7 +36,6 @@ from .protocol import (
     decode_client_message,
     encode,
     error,
-    new_id,
     pong,
     text_input,
 )
@@ -81,7 +80,7 @@ class MemoryResetRequest(BaseModel):
 def _memory_view(snapshot: Any, limit: int = 100) -> dict[str, Any]:
     glossary = [
         {"source": source, "target": target}
-        for (_src, _tgt, source), target in list(snapshot.glossary.items())[:limit]
+        for source, target in list(snapshot.glossary_display.values())[:limit]
     ]
     return {
         "profile": snapshot.profile,

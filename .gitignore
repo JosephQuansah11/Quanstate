@@ -33,3 +33,21 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Node / TypeScript
+node_modules/
+dist/
+.expo/
+*.tsbuildinfo
+coverage/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+api/data/runtime/
+
+# Environment
+.env
+.DS_Store

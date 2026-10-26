@@ -59,6 +59,20 @@ describe("pcm", () => {
     expect(pcm16ToFloat(pcm)[1]).toBeCloseTo(-1, 3);
   });
 
+  it("converts a 20 ms capture frame inside the 5 ms hot-path budget", () => {
+    const input = sine(440, 48_000, 0.02);
+    const durations: number[] = [];
+    for (let index = 0; index < 300; index += 1) {
+      const started = performance.now();
+      const resampled = downsample(input, 48_000, 16_000);
+      floatToPcm16(resampled);
+      durations.push(performance.now() - started);
+    }
+    durations.sort((a, b) => a - b);
+    const p95 = durations[Math.floor(durations.length * 0.95) - 1] ?? 0;
+    expect(p95).toBeLessThan(5);
+  });
+
   it("bounds the playback buffer by dropping the oldest audio", () => {
     const buffer = new PcmPlaybackBuffer(10);
     buffer.push(new Float32Array(6).fill(1));

@@ -13,6 +13,9 @@ export interface LearnedDocument {
   glossaryAdded: number;
   hotwordsAdded: number;
   createdAt: number;
+  segments?: number;
+  bilingualPairs?: number;
+  videoId?: string;
   metadata?: Record<string, unknown>;
 }
 

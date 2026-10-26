@@ -5,9 +5,25 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "assetBundlePatterns": ["**/*"],
-    "ios": { "supportsTablet": true, "bundleIdentifier": "com.quanstate.translate" },
-    "android": { "package": "com.quanstate.translate" },
-    "plugins": ["expo-audio", "expo-document-picker"]
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.quanstate.translate"
+    },
+    "android": {
+      "package": "com.quanstate.translate"
+    },
+    "plugins": [
+      "expo-document-picker",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Allow Quanstate to listen so it can translate conversations.",
+          "speechRecognitionPermission": "Allow Quanstate to turn your speech into text on this device."
+        }
+      ]
+    ]
   }
 }

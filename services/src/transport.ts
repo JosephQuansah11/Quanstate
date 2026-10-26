@@ -7,7 +7,7 @@
  * microphone data is worse than dropped data.
  */
 
-import { encodeClientMessage, type ClientMessage } from "./protocol";
+import { encodeClientMessage, type ClientMessage } from "./protocol.js";
 
 export type TransportStatus = "idle" | "connecting" | "open" | "reconnecting" | "closed";
 

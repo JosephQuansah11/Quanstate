@@ -5,7 +5,7 @@
  * stop), tracks latency, and re-establishes itself after a network drop.
  */
 
-import { BudgetTracker, LatencyStats } from "./metrics";
+import { BudgetTracker, LatencyStats } from "./metrics.js";
 import {
   ProtocolError,
   parseServerMessage,
@@ -14,8 +14,8 @@ import {
   type SessionReady,
   type TranslationEvent,
   type TtsStart,
-} from "./protocol";
-import type { RealtimeTransport, TransportStatus } from "./transport";
+} from "./protocol.js";
+import type { RealtimeTransport, TransportStatus } from "./transport.js";
 
 export interface RealtimeSessionOptions {
   transport: RealtimeTransport;

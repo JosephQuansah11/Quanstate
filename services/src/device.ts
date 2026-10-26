@@ -1,8 +1,8 @@
 /** High-level device façade used by the web, iOS and Android applications. */
 
-import { LearningClient, type LearnResponse, type MemoryView, type TranslationResponse } from "./learning";
-import { RealtimeSession, type RealtimeSessionOptions } from "./realtime";
-import { RealtimeTransport, realtimeUrl, type WebSocketFactory } from "./transport";
+import { LearningClient, type LearnResponse, type MemoryView, type TranslationResponse } from "./learning.js";
+import { RealtimeSession, type RealtimeSessionOptions } from "./realtime.js";
+import { RealtimeTransport, realtimeUrl, type WebSocketFactory } from "./transport.js";
 
 export interface DeviceOptions {
   baseUrl?: string;

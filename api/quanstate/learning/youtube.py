@@ -12,6 +12,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Protocol
 
+from ..config import http_verify_option
 from .store import MemoryStore
 
 YOUTUBE_ID_RE = re.compile(r"(?:v=|/shorts/|/embed/|youtu\.be/|/live/)([A-Za-z0-9_-]{11})")
@@ -71,7 +72,7 @@ class HttpYouTubeFetcher:
         except ImportError as exc:  # pragma: no cover - httpx ships with the service extras
             raise YouTubeError("YouTube ingestion needs the 'httpx' dependency") from exc
 
-        async with httpx.AsyncClient(timeout=self.timeout, headers=self.HEADERS, follow_redirects=True) as client:
+        async with httpx.AsyncClient(timeout=self.timeout, headers=self.HEADERS, follow_redirects=True, verify=http_verify_option()) as client:
             try:
                 page = await client.get(self.WATCH_URL, params={"v": video_id, "hl": "en"})
                 page.raise_for_status()
@@ -96,7 +97,7 @@ class HttpYouTubeFetcher:
                 response.raise_for_status()
             except Exception as exc:
                 raise YouTubeError(f"could not download captions: {exc}") from exc
-            return resolved_language, self.parse_json3(response.text, translate_to or resolved_language)
+            return (translate_to or resolved_language), self.parse_json3(response.text, translate_to or resolved_language)
 
     @staticmethod
     def _caption_tracks(html: str) -> list[dict[str, Any]]:
@@ -142,26 +143,36 @@ class YouTubeLearner:
         bilingual: bool = True,
     ) -> dict[str, Any]:
         video_id = parse_video_id(url)
-        track_language, segments = await self.fetcher.fetch(video_id, source_lang, target_lang if bilingual else None)
+        source_base = source_lang.split("-")[0]
+        target_base = target_lang.split("-")[0]
+
+        # Always fetch the source track first: even when YouTube rate-limits the
+        # machine-translated track, monolingual terms/hotwords are still valuable.
+        track_language, segments = await self.fetcher.fetch(video_id, source_lang, None)
         if not segments:
             raise YouTubeError("the caption track was empty")
 
         lines: list[str] = [segment.text for segment in segments if segment.text]
         text = "\n".join(lines)
 
-        # Use the translated track as a parallel corpus when YouTube has one.
+        # Prefer YouTube's translated track as a parallel corpus; fall back to a
+        # native caption track in the target language when one exists.
         pairs: list[tuple[str, str]] = []
-        if bilingual and track_language.split("-")[0] == source_lang.split("-")[0]:
-            try:
-                translated_language, translated = await self.fetcher.fetch(video_id, target_lang, None)
-                if translated_language.split("-")[0] == target_lang.split("-")[0]:
-                    pairs = [
-                        (original.text, translation.text)
-                        for original, translation in zip(segments, translated)
-                        if original.text and translation.text and original.text != translation.text
-                    ]
-            except YouTubeError:
-                pairs = []
+        if bilingual:
+            for language, translate_to in ((source_lang, target_lang), (target_lang, None)):
+                try:
+                    translated_language, translated = await self.fetcher.fetch(video_id, language, translate_to)
+                except YouTubeError:
+                    continue
+                if translated_language.split("-")[0] != target_base or not translated:
+                    continue
+                pairs = [
+                    (original.text, translation.text)
+                    for original, translation in zip(segments, translated)
+                    if original.text and translation.text and original.text != translation.text
+                ]
+                if pairs:
+                    break
 
         if pairs:
             self.store.add_phrases(profile, source_lang, target_lang, pairs, origin="youtube", weight=1.4)
@@ -181,6 +192,7 @@ class YouTubeLearner:
             metadata={
                 "videoId": video_id,
                 "captionLanguage": track_language,
+                "sourceLanguage": source_base,
                 "segments": len(segments),
                 "bilingualPairs": len(pairs),
                 "translatedTrack": bool(pairs),

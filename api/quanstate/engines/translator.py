@@ -18,7 +18,7 @@ from typing import Any, Sequence
 
 from ..languages import get_language
 from ..learning.store import MemorySnapshot, MemoryStore
-from ..learning.text import normalize_phrase
+from ..config import http_verify_option
 from .base import EngineError, Translation, TranslationHints, Translator
 
 TOKEN_RE = re.compile(r"[\w'’\-]+|[^\w\s]", re.UNICODE)
@@ -257,11 +257,19 @@ class CachedTranslator:
         total = self.hits + self.misses
         return (self.hits / total) if total else 0.0
 
+    def _memory_version(self, hints: TranslationHints | None) -> int:
+        if hints is not None:
+            return hints.memory_version
+        store = getattr(self.inner, "store", None)
+        if store is not None:
+            return int(store.snapshot("default").version)
+        return 0
+
     async def translate(
         self, text: str, source_lang: str, target_lang: str, hints: TranslationHints | None = None
     ) -> Translation:
         started = time.perf_counter()
-        key = ((hints.memory_version if hints else 0), source_lang, target_lang, text)
+        key = (self._memory_version(hints), source_lang, target_lang, text)
         cached = self._cache.get(key)
         if cached is not None:
             self._cache.move_to_end(key)
@@ -350,7 +358,7 @@ class HttpTranslator:
                         import httpx
                     except ImportError as exc:  # pragma: no cover
                         raise EngineError("HttpTranslator needs httpx") from exc
-                    self._client = httpx.AsyncClient(timeout=self.timeout)
+                    self._client = httpx.AsyncClient(timeout=self.timeout, verify=http_verify_option())
         return self._client
 
     async def translate(

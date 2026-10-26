@@ -121,6 +121,11 @@ _ES_EN_WORDS = {
     "translation": "traducción", "memory": "memoria", "voice": "voz", "text": "texto",
     "real": "real", "system": "sistema", "upload": "subir", "download": "descargar",
     "quality": "calidad", "sentence": "frase", "word": "palabra", "conversation": "conversación",
+    "the": "el", "is": "es", "are": "son", "was": "era", "were": "eran", "of": "de",
+    "a": "un", "an": "un", "it": "eso", "not": "no",
+    "i'm": "estoy", "don't": "no", "does": "hace", "has": "tiene", "these": "estos",
+    "those": "esos",
+    "good morning": "buenos días", "good night": "buenas noches", "how much": "cuánto",
 }
 
 _FR_WORDS = {
@@ -132,6 +137,8 @@ _FR_WORDS = {
     "speak": "parler", "english": "anglais", "language": "langue", "translate": "traduire",
     "time": "temps", "need": "besoin", "have": "avoir", "want": "vouloir", "coffee": "café",
     "reservation": "réservation", "room": "chambre", "menu": "menu", "bill": "addition",
+    "the": "le", "is": "est", "are": "sont", "a": "un", "an": "un", "of": "de",
+    "to": "à", "and": "et", "with": "avec", "for": "pour", "i": "je", "you": "vous",
 }
 
 _DE_WORDS = {
@@ -143,6 +150,8 @@ _DE_WORDS = {
     "speak": "sprechen", "english": "Englisch", "language": "Sprache", "translate": "übersetzen",
     "time": "Zeit", "need": "brauchen", "have": "haben", "want": "wollen", "coffee": "Kaffee",
     "reservation": "Reservierung", "room": "Zimmer", "menu": "Speisekarte", "bill": "Rechnung",
+    "the": "der", "is": "ist", "are": "sind", "a": "ein", "an": "ein", "of": "von",
+    "to": "zu", "and": "und", "with": "mit", "for": "für", "i": "ich", "you": "du",
 }
 
 

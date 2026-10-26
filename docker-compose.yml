@@ -1,0 +1,17 @@
+services:
+  quanstate:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      QUANSTATE_DATA_DIR: /data
+      QUANSTATE_CORS_ORIGINS: "*"
+      QUANSTATE_TTS: auto
+      # QUANSTATE_STT: faster-whisper
+      # QUANSTATE_WHISPER_MODEL: small
+    volumes:
+      - quanstate-data:/data
+    restart: unless-stopped
+
+volumes:
+  quanstate-data:

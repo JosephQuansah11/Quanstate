@@ -4,7 +4,7 @@
  * `AudioCapture` / `SpeechSink`; this file owns the reusable, testable parts.
  */
 
-import { PcmFrameChunker, TARGET_SAMPLE_RATE, rms } from "./pcm";
+import { PcmFrameChunker, TARGET_SAMPLE_RATE, rms } from "./pcm.js";
 
 export interface AudioCapture {
   readonly sampleRate: number;

@@ -34,6 +34,7 @@ class MemorySnapshot:
     version: int
     phrases: Mapping[tuple[str, str, str], tuple[str, float, str]]
     glossary: Mapping[tuple[str, str, str], str]
+    glossary_display: Mapping[tuple[str, str, str], tuple[str, str]]
     lexicon: Mapping[tuple[str, str, str], str]
     hotwords: Mapping[str, tuple[str, ...]]
     documents: tuple[dict[str, Any], ...]
@@ -102,6 +103,9 @@ class MemoryStore:
         data["version"] = int(data.get("version", 1)) + 1
         payload = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
         tmp = path.with_suffix(".json.tmp")
+        tmp.write_text(payload, encoding="utf-8")
+        os.replace(tmp, path)
+        self._snapshots.pop(profile, None)
 
     # -------------------------------------------------------------- writes
     def add_phrases(
@@ -198,11 +202,6 @@ class MemoryStore:
             self._write(profile, data)
             return record
 
-        tmp.write_text(payload, encoding="utf-8")
-        os.replace(tmp, path)
-        self._snapshots.pop(profile, None)
-
-
     def learn_text(
         self,
         profile: str,
@@ -287,9 +286,11 @@ class MemoryStore:
                     phrases[key] = (item["target"], weight, item.get("origin", "document"))
 
             glossary: dict[tuple[str, str, str], str] = {}
+            glossary_display: dict[tuple[str, str, str], tuple[str, str]] = {}
             for item in data["glossary"]:
                 key = (item["sourceLang"], item["targetLang"], normalize_phrase(item["source"]))
                 glossary[key] = item["target"]
+                glossary_display[key] = (item["source"], item["target"])
 
             lexicon: dict[tuple[str, str, str], str] = {}
             if self._seed:
@@ -314,6 +315,7 @@ class MemoryStore:
                 version=current_version,
                 phrases=phrases,
                 glossary=glossary,
+                glossary_display=glossary_display,
                 lexicon=lexicon,
                 hotwords=hotwords,
                 documents=tuple(data["documents"]),

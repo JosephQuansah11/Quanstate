@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import os
+import ssl
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 
 PACKAGE_DIR = Path(__file__).resolve().parent
@@ -49,7 +51,7 @@ class Settings:
     max_frame_bytes: int = 1_000_000
     audio_queue_size: int = 64
     tts_mode: str = "client"  # "client" | "server"
-    stt_provider: str = "auto"  # auto | faster-whisper | http | scripted | none
+    stt_provider: str = "none"  # none | auto | faster-whisper | http | scripted
     translation_provider: str = "auto"  # auto | memory | nllb | http
     tts_provider: str = "auto"  # auto | piper | tone
     whisper_model: str = "tiny"
@@ -66,6 +68,11 @@ class Settings:
 
 
 def load_settings() -> Settings:
+    cors_origins = tuple(
+        origin.strip()
+        for origin in os.environ.get("QUANSTATE_CORS_ORIGINS", "*").split(",")
+        if origin.strip()
+    ) or ("*",)
     budget = LatencyBudget(
         fast_path_ms=_env_float("QUANSTATE_FAST_PATH_MS", 5.0),
         end_to_end_ms=_env_float("QUANSTATE_E2E_MS", 100.0),
@@ -78,7 +85,7 @@ def load_settings() -> Settings:
         frame_ms=_env_int("QUANSTATE_FRAME_MS", 20),
         audio_queue_size=_env_int("QUANSTATE_AUDIO_QUEUE", 64),
         tts_mode=os.environ.get("QUANSTATE_TTS_MODE", "client"),
-        stt_provider=os.environ.get("QUANSTATE_STT", "auto"),
+        stt_provider=os.environ.get("QUANSTATE_STT", "none"),
         translation_provider=os.environ.get("QUANSTATE_TRANSLATOR", "auto"),
         tts_provider=os.environ.get("QUANSTATE_TTS", "auto"),
         whisper_model=os.environ.get("QUANSTATE_WHISPER_MODEL", "tiny"),
@@ -89,8 +96,28 @@ def load_settings() -> Settings:
         piper_voice_dir=os.environ.get("QUANSTATE_PIPER_VOICES", ""),
         data_dir=Path(os.environ.get("QUANSTATE_DATA_DIR", str(PACKAGE_DIR.parent / "data" / "runtime"))),
         max_cache_entries=_env_int("QUANSTATE_CACHE_ENTRIES", 4096),
+        cors_origins=cors_origins,
         latency_budget=budget,
     )
+
+
+@lru_cache(maxsize=1)
+def http_verify_option() -> ssl.SSLContext | bool:
+    """Return an httpx ``verify`` value that honours corporate CA bundles.
+
+    Deployments behind a TLS-inspecting proxy can point QUANSTATE_CA_BUNDLE (or
+    the conventional SSL_CERT_FILE) at a PEM file instead of disabling checks.
+    The custom CA is *added* to the system trust store, so public certificates
+    keep working too.
+    """
+
+    for variable in ("QUANSTATE_CA_BUNDLE", "SSL_CERT_FILE", "REQUESTS_CA_BUNDLE"):
+        value = os.environ.get(variable)
+        if value and Path(value).is_file():
+            context = ssl.create_default_context()
+            context.load_verify_locations(cafile=value)
+            return context
+    return True
 
 
 SETTINGS = load_settings()

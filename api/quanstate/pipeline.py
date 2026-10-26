@@ -126,7 +126,7 @@ class DuplexPipeline:
         self._generation = 0
         self._active_id = ""
         self._was_speaking = False
-        self._last_partial_at = 0.0
+        self._last_partial_audio_s = 0.0
         self._partial_busy = False
         self._partial_task: asyncio.Task[None] | None = None
         self._hotwords_cached: tuple[int, tuple[str, ...]] = (-1, ())
@@ -210,7 +210,7 @@ class DuplexPipeline:
             speaking = self._vad.speaking
             if speaking and not self._was_speaking:
                 self._active_id = new_id("utt")
-                self._last_partial_at = time.perf_counter()
+                self._last_partial_audio_s = 0.0
             self._was_speaking = speaking
             for utterance in utterances:
                 self._generation += 1
@@ -397,11 +397,6 @@ class DuplexPipeline:
         )
         await self._translate_and_emit(job.segment_id, job.text, 0.0, job.received_at)
 
-        """Wait until every queued utterance has been answered (tests/benchmarks)."""
-
-        await self._queue.join()
-
-
     async def _translate_and_emit(
         self, segment_id: str, text: str, stt_ms: float, received_at: float
     ) -> None:
@@ -506,12 +501,12 @@ class DuplexPipeline:
     def _maybe_partial(self) -> None:
         if not self.engines.transcriber.supports_partials or self._partial_busy:
             return
-        now = time.perf_counter()
-        if now - self._last_partial_at < PARTIAL_INTERVAL_S:
+        buffered_s = self._vad.current_audio().size / self.sample_rate
+        if buffered_s < MIN_PARTIAL_AUDIO_S:
             return
-        if self._vad.current_audio().size < MIN_PARTIAL_AUDIO_S * self.sample_rate:
+        if buffered_s - self._last_partial_audio_s < PARTIAL_INTERVAL_S:
             return
-        self._last_partial_at = now
+        self._last_partial_audio_s = buffered_s
         self._partial_task = asyncio.create_task(self._run_partial(self._generation, self._active_id))
 
     async def _run_partial(self, generation: int, segment_id: str) -> None:

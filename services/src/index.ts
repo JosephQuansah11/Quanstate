@@ -4,12 +4,12 @@
  * WebSocket factory, microphone capture, speech sink and audio player.
  */
 
-export * from "./languages";
-export * from "./protocol";
-export * from "./transport";
-export * from "./pcm";
-export * from "./metrics";
-export * from "./realtime";
-export * from "./audio";
-export * from "./learning";
-export * from "./device";
+export * from "./languages.js";
+export * from "./protocol.js";
+export * from "./transport.js";
+export * from "./pcm.js";
+export * from "./metrics.js";
+export * from "./realtime.js";
+export * from "./audio.js";
+export * from "./learning.js";
+export * from "./device.js";

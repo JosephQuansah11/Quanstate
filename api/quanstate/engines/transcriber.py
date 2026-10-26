@@ -15,6 +15,7 @@ import numpy as np
 
 from ..audio import resample, wav_bytes
 from ..languages import get_language
+from ..config import http_verify_option
 from .base import EngineError, Transcription
 
 
@@ -196,7 +197,7 @@ class HttpWhisperTranscriber:
             except ImportError as exc:  # pragma: no cover
                 raise EngineError("HTTP STT needs httpx") from exc
             headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
-            self._client = httpx.AsyncClient(timeout=self.timeout, headers=headers)
+            self._client = httpx.AsyncClient(timeout=self.timeout, headers=headers, verify=http_verify_option())
         return self._client
 
     async def transcribe(
