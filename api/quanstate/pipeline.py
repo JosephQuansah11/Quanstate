@@ -170,8 +170,15 @@ class DuplexPipeline:
         with contextlib.suppress(asyncio.QueueFull):
             self._queue.put_nowait(_Job(kind="stop", received_at=time.perf_counter()))
         if self._worker is not None:
-            with contextlib.suppress(asyncio.CancelledError, Exception):
+            try:
                 await asyncio.wait_for(self._worker, timeout=5.0)
+            except (asyncio.TimeoutError, asyncio.CancelledError):
+                # The queue was full when stop was requested; do not leak the task.
+                self._worker.cancel()
+                with contextlib.suppress(asyncio.CancelledError, Exception):
+                    await self._worker
+            except Exception:
+                LOGGER.debug("worker exited with an error", exc_info=True)
 
     async def stats(self) -> dict[str, Any]:
         return {

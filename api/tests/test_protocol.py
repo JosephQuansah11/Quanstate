@@ -79,3 +79,14 @@ def test_encode_is_compact_and_roundtrips() -> None:
     payload = error("boom", code="internal")
     assert encode(payload) == '{"type":"error","code":"internal","message":"boom","recoverable":true}'
     assert pong(42)["t"] == 42
+
+
+def test_cors_origins_come_from_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    from quanstate.config import load_settings
+
+    monkeypatch.setenv("QUANSTATE_CORS_ORIGINS", "https://app.example.com, https://admin.example.com")
+    settings = load_settings()
+    assert settings.cors_origins == ("https://app.example.com", "https://admin.example.com")
+
+    monkeypatch.setenv("QUANSTATE_CORS_ORIGINS", "  ")
+    assert load_settings().cors_origins == ("*",)

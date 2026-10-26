@@ -430,7 +430,10 @@ class NllbTranslator:
                 model.eval()
                 return tokenizer, model
 
-            self._tokenizer, self._model = await asyncio.to_thread(load)
+            try:
+                self._tokenizer, self._model = await asyncio.to_thread(load)
+            except Exception as exc:  # missing weights, SSL/download failure, OOM
+                raise EngineError(f"could not load NLLB model {self.model_name!r}: {exc}") from exc
             self._torch = torch
 
     async def translate(
@@ -454,7 +457,10 @@ class NllbTranslator:
                 )
             return tokenizer.batch_decode(generated, skip_special_tokens=True)[0]
 
-        translated = await asyncio.to_thread(run)
+        try:
+            translated = await asyncio.to_thread(run)
+        except Exception as exc:
+            raise EngineError(f"NLLB inference failed: {exc}") from exc
         return Translation(
             text=translated,
             source_text=text,
