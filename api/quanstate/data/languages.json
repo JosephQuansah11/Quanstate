@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "defaults": { "source": "en", "target": "es", "sampleRate": 16000 },
+  "languages": [
+    { "code": "en", "name": "English", "nativeName": "English", "bcp47": "en-US", "direction": "ltr", "whisper": "en", "nllb": "eng_Latn", "piper": "en_US-amy-medium" },
+    { "code": "es", "name": "Spanish", "nativeName": "Español", "bcp47": "es-ES", "direction": "ltr", "whisper": "es", "nllb": "spa_Latn", "piper": "es_ES-davefx-medium" },
+    { "code": "fr", "name": "French", "nativeName": "Français", "bcp47": "fr-FR", "direction": "ltr", "whisper": "fr", "nllb": "fra_Latn", "piper": "fr_FR-siwis-medium" },
+    { "code": "de", "name": "German", "nativeName": "Deutsch", "bcp47": "de-DE", "direction": "ltr", "whisper": "de", "nllb": "deu_Latn", "piper": "de_DE-thorsten-medium" },
+    { "code": "pt", "name": "Portuguese", "nativeName": "Português", "bcp47": "pt-BR", "direction": "ltr", "whisper": "pt", "nllb": "por_Latn", "piper": "pt_BR-faber-medium" },
+    { "code": "it", "name": "Italian", "nativeName": "Italiano", "bcp47": "it-IT", "direction": "ltr", "whisper": "it", "nllb": "ita_Latn", "piper": "it_IT-riccardo-x_low" },
+    { "code": "nl", "name": "Dutch", "nativeName": "Nederlands", "bcp47": "nl-NL", "direction": "ltr", "whisper": "nl", "nllb": "nld_Latn", "piper": "nl_NL-mls-medium" },
+    { "code": "pl", "name": "Polish", "nativeName": "Polski", "bcp47": "pl-PL", "direction": "ltr", "whisper": "pl", "nllb": "pol_Latn", "piper": "pl_PL-darkman-medium" },
+    { "code": "tr", "name": "Turkish", "nativeName": "Türkçe", "bcp47": "tr-TR", "direction": "ltr", "whisper": "tr", "nllb": "tur_Latn", "piper": "tr_TR-dfki-medium" },
+    { "code": "ru", "name": "Russian", "nativeName": "Русский", "bcp47": "ru-RU", "direction": "ltr", "whisper": "ru", "nllb": "rus_Cyrl", "piper": "ru_RU-dmitri-medium" },
+    { "code": "uk", "name": "Ukrainian", "nativeName": "Українська", "bcp47": "uk-UA", "direction": "ltr", "whisper": "uk", "nllb": "ukr_Cyrl", "piper": "uk_UA-ukrainian_tts-medium" },
+    { "code": "ar", "name": "Arabic", "nativeName": "العربية", "bcp47": "ar-SA", "direction": "rtl", "whisper": "ar", "nllb": "arb_Arab", "piper": null },
+    { "code": "hi", "name": "Hindi", "nativeName": "हिन्दी", "bcp47": "hi-IN", "direction": "ltr", "whisper": "hi", "nllb": "hin_Deva", "piper": null },
+    { "code": "bn", "name": "Bengali", "nativeName": "বাংলা", "bcp47": "bn-BD", "direction": "ltr", "whisper": "bn", "nllb": "ben_Beng", "piper": null },
+    { "code": "zh", "name": "Chinese", "nativeName": "中文", "bcp47": "zh-CN", "direction": "ltr", "whisper": "zh", "nllb": "zho_Hans", "piper": null },
+    { "code": "ja", "name": "Japanese", "nativeName": "日本語", "bcp47": "ja-JP", "direction": "ltr", "whisper": "ja", "nllb": "jpn_Jpan", "piper": null },
+    { "code": "ko", "name": "Korean", "nativeName": "한국어", "bcp47": "ko-KR", "direction": "ltr", "whisper": "ko", "nllb": "kor_Hang", "piper": null },
+    { "code": "vi", "name": "Vietnamese", "nativeName": "Tiếng Việt", "bcp47": "vi-VN", "direction": "ltr", "whisper": "vi", "nllb": "vie_Latn", "piper": null },
+    { "code": "th", "name": "Thai", "nativeName": "ไทย", "bcp47": "th-TH", "direction": "ltr", "whisper": "th", "nllb": "tha_Thai", "piper": null },
+    { "code": "id", "name": "Indonesian", "nativeName": "Bahasa Indonesia", "bcp47": "id-ID", "direction": "ltr", "whisper": "id", "nllb": "ind_Latn", "piper": null },
+    { "code": "sw", "name": "Swahili", "nativeName": "Kiswahili", "bcp47": "sw-KE", "direction": "ltr", "whisper": "sw", "nllb": "swh_Latn", "piper": null }
+  ]
+}

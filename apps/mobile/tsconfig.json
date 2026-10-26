@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "types": ["react", "react-native"],
+    "moduleResolution": "Bundler"
+  },
+  "include": ["App.tsx", "index.ts", "src"]
+}

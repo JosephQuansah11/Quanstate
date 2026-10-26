@@ -1,0 +1,22 @@
+{
+  "name": "quanstate",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Realtime translation device \u2014 Python duplex service, shared TypeScript services, web and mobile clients",
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "dev:web": "npm run dev --workspace @quanstate/web",
+    "dev:api": "cd api && uvicorn quanstate.server:app --reload --port 8000"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  },
+  "workspaces": [
+    "services",
+    "apps/web",
+    "apps/mobile"
+  ]
+}

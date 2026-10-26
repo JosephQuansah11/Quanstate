@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Quanstate",
+    "slug": "quanstate",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "assetBundlePatterns": ["**/*"],
+    "ios": { "supportsTablet": true, "bundleIdentifier": "com.quanstate.translate" },
+    "android": { "package": "com.quanstate.translate" },
+    "plugins": ["expo-audio", "expo-document-picker"]
+  }
+}
