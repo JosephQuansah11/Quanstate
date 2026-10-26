@@ -96,7 +96,7 @@ export function LatencyHud({ stats, ready, memory, online }: LatencyHudProps) {
           <div><strong>{memory?.stats.hotwords ?? ready?.memory.hotwords ?? 0}</strong><span>hotwords</span></div>
         </div>
         <p className="hud__note">
-          Upload documents or paste a YouTube URL to add phrase pairs, terminology and pronunciation hotwords. New
+          Upload documents or paste a YouTube URL to add phrase pairs, terminology and speech hotwords. New
           material invalidates the translation cache instantly.
         </p>
       </section>

@@ -5,7 +5,7 @@ COPY package.json package-lock.json tsconfig.base.json ./
 COPY services/package.json services/
 COPY apps/web/package.json apps/web/
 COPY apps/mobile/package.json apps/mobile/
-RUN npm ci --ignore-scripts
+RUN npm ci
 COPY services services
 COPY apps/web apps/web
 RUN npm run build --workspace @quanstate/services && npm run build --workspace @quanstate/web

@@ -100,7 +100,7 @@ def extract_terms(text: str, language: str = "en", limit: int = 200) -> list[tup
 
     Score mixes frequency, capitalisation, length and digits/camelCase -- the
     signals that distinguish "Quanstate", "WebSocket" or "NLLB-200" from ordinary
-    prose.  The terms feed STT hotwords and TTS pronunciation lexicons, so video
+    prose.  The terms feed STT hotwords, so video
     uploads sharpen recognition and speech as well as translation.
     """
 

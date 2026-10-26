@@ -62,8 +62,8 @@ export function LearnScreen({ device, sourceLang, targetLang, memory, onRefresh 
           <span className="screen-header__eyebrow"><Icon name="learn" /> Teaching</span>
           <h1>Teach your device</h1>
           <p>
-            Every upload becomes translation memory: parallel phrases, protected terminology, speech-recognition
-            hotwords and pronunciation hints. Nothing is retrained, so it takes effect on the next sentence.
+            Every upload becomes translation memory: parallel phrases, protected terminology and speech-recognition hotwords.
+            Nothing is retrained, so it takes effect on the next sentence.
           </p>
         </div>
         <div className="learn-pair">

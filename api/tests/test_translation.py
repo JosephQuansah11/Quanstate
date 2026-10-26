@@ -27,7 +27,7 @@ async def test_exact_phrase_uses_seed_memory(translator: MemoryTranslator) -> No
     assert result.text == "hola"
     assert result.confidence == 1.0
     assert result.coverage == 1.0
-    assert result.glossary_hits == ("hello",)
+    assert result.glossary_hits == ()
     assert result.latency_ms < 5
 
 

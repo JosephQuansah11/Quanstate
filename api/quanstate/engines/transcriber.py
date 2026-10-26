@@ -115,12 +115,15 @@ class FasterWhisperTranscriber:
                 from faster_whisper import WhisperModel
             except ImportError as exc:  # pragma: no cover - optional extra
                 raise EngineError("local STT needs faster-whisper (pip install 'quanstate[stt]')") from exc
-            self._model = await asyncio.to_thread(
-                WhisperModel,
-                self.model_size,
-                device=self.device,
-                compute_type=self.compute_type,
-            )
+            try:
+                self._model = await asyncio.to_thread(
+                    WhisperModel,
+                    self.model_size,
+                    device=self.device,
+                    compute_type=self.compute_type,
+                )
+            except Exception as exc:  # missing model, download/SSL failure, bad compute type
+                raise EngineError(f"could not load Whisper model {self.model_size!r}: {exc}") from exc
         return self._model
 
     def _run_model(self, audio: np.ndarray, language: str, hotwords: Sequence[str]) -> tuple[str, float]:
@@ -161,8 +164,13 @@ class FasterWhisperTranscriber:
             audio = resample(audio, sample_rate, 16_000)
         if partial:
             audio = audio[-16_000 * 8 :]
-        async with self._infer_lock:
-            text, confidence = await asyncio.to_thread(self._run_model, audio, language, hotwords)
+        try:
+            async with self._infer_lock:
+                text, confidence = await asyncio.to_thread(self._run_model, audio, language, hotwords)
+        except EngineError:
+            raise
+        except Exception as exc:
+            raise EngineError(f"speech recognition failed: {exc}") from exc
         return Transcription(
             text=text,
             language=language,

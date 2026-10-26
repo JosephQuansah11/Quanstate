@@ -89,6 +89,9 @@ class MemoryTranslator:
         exact = snapshot.phrase(source_lang, target_lang, core)
         if exact is not None:
             target_text, _weight, origin = exact
+            protected = snapshot.term(source_lang, target_lang, core) is not None
+            if trailing and not target_text.endswith(trailing[0]):
+                target_text += trailing
             return Translation(
                 text=target_text,
                 source_text=clean,
@@ -97,7 +100,7 @@ class MemoryTranslator:
                 engine=self.name,
                 confidence=1.0,
                 coverage=1.0,
-                glossary_hits=(clean,),
+                glossary_hits=(core,) if protected else (),
                 latency_ms=(time.perf_counter() - started) * 1000.0,
                 detail={"match": f"phrase:{origin}"},
             )

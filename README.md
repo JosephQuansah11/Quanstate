@@ -31,8 +31,7 @@ YouTube videos you feed it, and it runs as one service shared by **web, iOS and 
 - **Text to speech** — native device voice by default (near-zero added latency), or streamed server PCM from Piper or
   the bundled formant synthesizer (`/v1/tts` also returns WAV for integrations).
 - **Learning that takes effect immediately** — upload `.txt/.md/.srt/.vtt/.csv/.tsv/.json/.html/.docx/.pdf` or a
-  YouTube URL. Extracts parallel phrases (`a = b`, `a | b`, tabs), protects terminology, mines domain hotwords for STT
-  and TTS, and invalidates the translation cache atomically.
+  YouTube URL. Extracts parallel phrases (`a = b`, `a | b`, tabs), protects terminology, mines domain hotwords for STT, and invalidates the translation cache atomically.
 - **Telemetry built in** — per-stage percentiles, end-to-end p50/p95/max, cache-hit rate, dropped-frame counters and a
   declarative latency budget enforced by tests.
 
@@ -123,7 +122,7 @@ The service:
 
 1. extracts explicit bilingual pairs and mirrors them (`en→es` and `es→en`),
 2. ranks domain terms (capitalisation, camelCase, digits, repetition) into a protected glossary,
-3. pushes source and target terms into STT hotwords and TTS pronunciation hints,
+3. pushes source and target terms into STT hotwords,
 4. bumps the memory version, invalidating stale cached translations on the next utterance.
 
 YouTube ingestion reads the public caption track and, when available, YouTube's machine-translated track as a parallel

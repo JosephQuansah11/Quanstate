@@ -86,8 +86,8 @@ profile.
 ```
 upload ──► text extraction ──► pair extraction (a = b, a | b, TSV)
    │                │                 │
-   │                └─► term ranking ─┼─► protected glossary
-   │                                  └─► STT hotwords / TTS pronunciation
+   │                └─► term ranking ──┼─► protected glossary
+   │                                  └─► STT hotwords
    └─► document record (provenance, counts, digest) ──► atomic JSON write ──► version++ ──► cache key changes
 ```
 
